@@ -88,7 +88,7 @@ int new_user_id = 0;
 void HEAL_repeat(int player_id);
 void LOGIN(int key, int id);
 void DIE_Check(int player_id);
-
+void LEVEL_Up_Check(int player_id);
 
 void error_display(const char *msg, int err_no)
 {
@@ -307,7 +307,7 @@ void Attack(int id)
 
 				clients[obj]->die = true;
 				// 사망 여기! 
-				//send_die_packet(id);
+				LEVEL_Up_Check(id);
 			}
 			send_put_object_packet(id, obj);
 
@@ -552,17 +552,26 @@ void DIE_Check(int player_id)
 
 void LEVEL_Up_Check(int player_id)
 {
-	if (false == Is_NPC(player_id))
-	{
-		if (clients[player_id]->exp >= (pow((double)2, (double)(clients[player_id]->level - 1)) * 100))
-		{
-			cout << "Level test " << endl;
-			clients[player_id]->exp = 0;
-			clients[player_id]->level += 1;
+	bool level_up = false;
 
-			send_state_change_packet(player_id, clients[player_id]->hp, clients[player_id]->level, clients[player_id]->exp);
-		}
-	}
+	do {
+		//if (false == Is_NPC(player_id))
+		//{
+			if (clients[player_id]->exp >= (pow((double)2, (double)(clients[player_id]->level - 1)) * 100))
+			{
+				level_up = true;
+				cout << "Level test " << endl;
+				clients[player_id]->exp = 0;
+				clients[player_id]->level += 1;
+
+				send_state_change_packet(player_id, clients[player_id]->hp, clients[player_id]->level, clients[player_id]->exp);
+			}
+			else {
+				level_up = false;
+			}
+		//}
+			cout << "이게 문제니?" << endl;
+	} while (level_up);
 }
 
 void HEAL_repeat(int player_id)
@@ -754,8 +763,6 @@ void do_worker()
 			if (clients[player_id]->x == clients[key]->x
 				&& clients[player_id]->y == clients[key]->y)
 			{
-				cout << "충돌" << endl;
-
 				clients[player_id]->hp -= 3;
 				send_state_change_packet(player_id, clients[player_id]->hp, clients[player_id]->level, clients[player_id]->exp);
 				DIE_Check(player_id);
@@ -763,8 +770,6 @@ void do_worker()
 		}
 		else if (EV_DIE == over_ex->event_type)
 		{
-			// 죽으면 30초 후에 부활
-
 
 			cout << " DIE 에 들어왔어요 " << endl;
 

@@ -591,7 +591,6 @@ void Input_PlayerID()
 	packet.size = sizeof(packet);
 	packet.type = CS_LOGIN;
 	strcpy_s(packet.id, input_id);
-	//packet.id = input_id.c_str();
 	size_t sent = 0;
 	socket.send(&packet, sizeof(packet), sent);
 

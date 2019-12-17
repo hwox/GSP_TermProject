@@ -38,6 +38,6 @@ function init_set_npc_infor(player_id)
 	end
 	init_active = false;
 	init_socket = -1;
-	API_setting_Init_NPC(player_id, init_x, init_y, init_type, init_level, init_hp, init_exp, init_active, init_socket)
-	
+	API_setting_Init_NPC(player_id, init_x, init_y, init_type, 
+	init_level, init_hp, init_exp, init_active, init_socket)
 end

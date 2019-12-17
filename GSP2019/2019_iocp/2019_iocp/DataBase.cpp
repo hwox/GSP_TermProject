@@ -46,7 +46,6 @@ bool DataBase::ForLoginCheckID(int id)
 
 	wsprintf(text, L"EXEC LoginID %d", id);
 
-	//retcode = SQLExecDirect(hstmt, (SQLWCHAR*)L"EXEC LoginID 1001", SQL_NTS);
 	retcode = SQLExecDirect(hstmt, (SQLWCHAR*)text, SQL_NTS);
 	if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
 		cout << "db success" << endl;
@@ -67,16 +66,11 @@ bool DataBase::ForLoginCheckID(int id)
 void DataBase::saveDB(int id, short x, short y, int level, int exp, int hp)
 {
 	retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
-
-	//char change_id[10];
-	//sprintf(change_id, "%d", id);
 	wchar_t text[100];
 
 	wsprintf(text, L"EXEC SaveData %d, %d, %d, %d, %d, %d", id, (int)x, (int)y, level, exp, hp);
 
-	//retcode = SQLExecDirect(hstmt, (SQLWCHAR*)L"EXEC LoginID 1001", SQL_NTS);
 	retcode = SQLExecDirect(hstmt, (SQLWCHAR*)text, SQL_NTS);
-
 	if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
 		cout << "DB 업데이트 완료" << endl;
 	}

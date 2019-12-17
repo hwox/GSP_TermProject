@@ -1,2 +1,9 @@
-﻿  NetworkModule.cpp
+﻿  DrawModule.cpp
+c:\users\hw\desktop\4-2\gameserverprogramming_termproject\gsp2019\2019-dummy\2019-dummy\drawmodule.cpp(85): warning C4267: '인수': 'size_t'에서 'GLsizei'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hw\desktop\4-2\gameserverprogramming_termproject\gsp2019\2019-dummy\2019-dummy\drawmodule.cpp(149): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hw\desktop\4-2\gameserverprogramming_termproject\gsp2019\2019-dummy\2019-dummy\drawmodule.cpp(150): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hw\desktop\4-2\gameserverprogramming_termproject\gsp2019\2019-dummy\2019-dummy\drawmodule.cpp(322): warning C4838: 'int'에서 'BYTE'(으)로의 변환에는 축소 변환이 필요합니다.
+c:\users\hw\desktop\4-2\gameserverprogramming_termproject\gsp2019\2019-dummy\2019-dummy\drawmodule.cpp(495): warning C4244: 'return': 'WPARAM'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  NetworkModule.cpp
+  코드를 생성하고 있습니다...
   2019-Dummy.vcxproj -> C:\Users\hw\Desktop\4-2\GameServerProgramming_TermProject\GSP2019\2019-Dummy\x64\Debug\2019-Dummy.exe
