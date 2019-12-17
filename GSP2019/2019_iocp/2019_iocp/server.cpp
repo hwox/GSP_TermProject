@@ -87,6 +87,8 @@ HANDLE	g_iocp;
 int new_user_id = 0;
 void HEAL_repeat(int player_id);
 void LOGIN(int key, int id);
+void DIE_Check(int player_id);
+
 
 void error_display(const char *msg, int err_no)
 {
@@ -196,11 +198,11 @@ void send_put_object_packet(int client, int new_id)
 	packet.x = clients[new_id]->x;
 	packet.y = clients[new_id]->y;
 	packet.npc_type = clients[new_id]->m_type;
-	//
+
 	packet.hp = clients[new_id]->hp;
 	packet.level = clients[new_id]->level;
 	packet.exp = clients[new_id]->exp;
-//
+
 	send_packet(client, &packet);
 
 	if (client == new_id) return;
@@ -259,7 +261,7 @@ void send_state_change_packet(int id, short hp, short level, int exp)
 	packet.exp = exp;
 
 	send_packet(id, &packet);
-	/*db.saveDB(clients[id]->name, clients[id]->x, clients[id]->y, level, exp, hp);*/
+
 }
 bool is_near_id(int player, int other)
 {
@@ -279,7 +281,31 @@ void Attack(int id)
 		if (obj == id) continue;
 		if (true == Is_NPC(obj) && is_near_attack(id, obj))
 		{
-			cout << "너는 몇 번이냐 " << obj << endl;
+			clients[obj]->hp -= (clients[id]->level * 5);
+			if (clients[obj]->hp <= 0)
+			{
+				clients[id]->exp += clients[obj]->exp;
+
+				send_state_change_packet(id, clients[id]->hp, clients[id]->level, clients[id]->exp);
+			}
+			send_put_object_packet(id, obj);
+			// '나'를 기준으로 attack하고 주변에 있는것들을 탐색한 거
+			char hit[5];
+			sprintf_s(hit, "hit");
+			send_chat_player_packet(id, obj, hit);
+
+
+			set <int> new_vl;
+			for (auto &cl : clients) {
+				int other = cl.second->id;
+				if (id == other) continue;
+				if (false == Is_NPC(other))
+				{
+					send_put_object_packet(other, obj);
+					/*char text[50];
+					sprintf(text, "[%d]번 플레이어가 공격했습니다.", id);*/
+				}
+			}
 
 		}
 	}
@@ -393,9 +419,6 @@ void ProcessPacket(int id, void *buff)
 	}
 	case CS_ATTACK:
 	{
-		cout << "공격 키 눌렀다! " << endl;
-		// 리스트 검색해서 (주변에 있는 npc)
-		// 걔네 상하좌우에 있는 애들 죽여야지 
 		Attack(id);
 	}
 	break;
@@ -414,6 +437,10 @@ void ProcessPacket(int id, void *buff)
 		y = clients[id]->y;
 		break;
 	}
+	case CS_STATE_CHANGE:
+		//서버에서 레벨 바뀌거나 경험치 바뀔 때 
+
+		break;
 	default:
 		break;
 	}
@@ -467,7 +494,6 @@ void ProcessPacket(int id, void *buff)
 }
 void DIE_Check(int player_id)
 {
-
 	if (false == Is_NPC(player_id)) {
 		if (clients[player_id]->hp <= 0)
 		{
@@ -539,7 +565,6 @@ void LOGIN(int key, int id)
 	}
 }
 
-
 void do_random_move(int npc_id)
 {
 	if (0 == clients.count(npc_id)) {
@@ -609,7 +634,6 @@ void do_random_move(int npc_id)
 
 }
 
-
 void do_monster_run_move(int npc_id, int player_id, int remain_repeat)
 {
 
@@ -637,7 +661,6 @@ void do_monster_run_move(int npc_id, int player_id, int remain_repeat)
 	add_timer(new_ev);
 
 }
-
 
 void do_worker()
 {
@@ -698,10 +721,40 @@ void do_worker()
 			// 그러면 여기 들어와서 player x, y로 move하면 되잖아. 
 			// 주변에 있는 애들한테는 move_target주고
 			// 주변에 없는 애들한테는 그냥 set_ev 주고
+
+
 			int player_id = *(int *)(over_ex->net_buf);
-			cout << player_id << "번째가 " << key << "이건 그냥 key고 MOVE_TARGET에 들어옴 " << endl;
+
+			//lua_State *L = clients[key]->L;
+
+			//lua_getglobal(L, "player_Conflict");	// 이 함수 호출
+			//lua_pushnumber(L, player_id);
+			//lua_pushnumber(L, clients[player_id]->x);
+			//lua_pushnumber(L, clients[player_id]->y);
+			//lua_pcall(L, 3, 1, 0);
+
+			//int result = (int)lua_tonumber(L, -1);
+			//lua_pop(L, 1);
+
+			//if (result == 2)
+			//{
+			//	clients[player_id]->hp -= 3 * clients[key]->level;
+			//	send_state_change_packet(player_id, clients[player_id]->hp, clients[player_id]->level, clients[player_id]->exp);
+			//	DIE_Check(player_id);
+
+			//}
+
+			if (clients[player_id]->x == clients[key]->x
+				&& clients[player_id]->y == clients[key]->y)
+			{
+				cout << "충돌" << endl;
+
+				clients[player_id]->hp -= 3;
+				send_state_change_packet(player_id, clients[player_id]->hp, clients[player_id]->level, clients[player_id]->exp);
+				DIE_Check(player_id);
+			}
 		}
-		else if (EV_DIE)
+		else if (EV_DIE == over_ex->event_type)
 		{
 			// 죽으면 30초 후에 부활
 		}
@@ -729,7 +782,6 @@ int lua_get_y_position(lua_State *L)
 	lua_pushnumber(L, y);
 	return 1;
 }
-
 
 int lua_send_chat_packet(lua_State *L)
 {
@@ -887,18 +939,14 @@ void do_timer()
 		}
 		else
 		{
-
 			//Set_NPC_TimeEV(p_ev.obj_id, p_ev.obj_id);
 			Set_NPC_StandEV(p_ev.obj_id, p_ev.obj_id);
 		}
-
-
 		//for (auto &obj : clients)
 		//{
 		//	DIE_Check(obj.second->id);
 		//	LEVEL_Up_Check(obj.second->id);
 		//}
-
 	}
 }
 

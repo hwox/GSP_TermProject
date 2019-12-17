@@ -39,7 +39,7 @@ constexpr auto BUF_SIZE = 200;
 constexpr auto MAX_USER = 10;
 
 void send_heal_timer_packet(int inc);
-
+void send_state_change_packet(int p_type, int hp, int exp, int level);
 // 이거 UI에 띄워야될 것들.
 // 서버에서 받아와서 client main에서 글씨로 띄울거임
 class player {
@@ -108,7 +108,7 @@ public:
 		m_sprite.setTexture(t);
 		m_sprite.setTextureRect(sf::IntRect(x, y, x2, y2));
 		m_time_out = high_resolution_clock::now();
-
+		m_text.setFillColor(sf::Color::Black);
 		TYPE.setFont(g_font);
 	}
 	OBJECT() {
@@ -146,7 +146,7 @@ public:
 		g_window->draw(m_sprite);
 
 		if (high_resolution_clock::now() < m_time_out) {
-			m_text.setPosition(rx - 10, ry - 10);
+			m_text.setPosition(rx - 5, ry - 10);
 			g_window->draw(m_text);
 		}
 		else {
@@ -244,6 +244,7 @@ void client_finish()
 	delete enemy;
 }
 
+
 void ProcessPacket(char *ptr)
 {
 	static bool first_time = true;
@@ -261,7 +262,7 @@ void ProcessPacket(char *ptr)
 		sc_packet_put_object *my_packet = reinterpret_cast<sc_packet_put_object *>(ptr);
 		int id = my_packet->id;
 		int type = my_packet->npc_type;
-		//int hp = my_packet->hp;
+		int hp = my_packet->hp;
 		//cout << hp << endl;
 		if (id == g_myid) {
 			avatar.move(my_packet->x, my_packet->y);
@@ -305,6 +306,13 @@ void ProcessPacket(char *ptr)
 			}
 			npcs[id].set_IdType(my_packet->level,my_packet->hp);
 			
+			if (my_packet->hp <= 0)
+			{
+				cout << "사망" << endl;
+				// 그냥 얘 die처리만 하고 player한테 exp 올려주기만할까? 
+				//send_state_change_packet(type, my_packet->hp, my_packet->exp, my_packet->level);
+			}
+
 		}
 		break;
 	}
@@ -503,6 +511,7 @@ void send_attack_packet()
 	size_t sent = 0;
 	socket.send(&packet, sizeof(packet), sent);
 }
+
 void Input_PlayerID()
 {
 	cout << "ID 입력 : " << endl;

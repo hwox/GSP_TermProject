@@ -1,11 +1,11 @@
 ﻿  server.cpp
 c:\users\hw\desktop\4-2\gameserverprogramming_termproject\gsp2019\2019_iocp\2019_iocp\database.h(6): warning C4005: 'UNICODE': 매크로 재정의
   c:\users\hw\desktop\4-2\gameserverprogramming_termproject\gsp2019\2019_iocp\2019_iocp\server.cpp: note: 'UNICODE'의 이전 정의를 참조하십시오.
-c:\users\hw\desktop\4-2\gameserverprogramming_termproject\gsp2019\2019_iocp\2019_iocp\server.cpp(505): warning C4101: 'packet' :참조되지 않은 지역 변수입니다.
+c:\users\hw\desktop\4-2\gameserverprogramming_termproject\gsp2019\2019_iocp\2019_iocp\server.cpp(531): warning C4101: 'packet' :참조되지 않은 지역 변수입니다.
 LINK : warning LNK4098: 'LIBCMT' defaultlib가 다른 라이브러리와 충돌합니다. /NODEFAULTLIB:library를 사용하십시오.
   코드를 생성하고 있습니다.
-  4 of 609 functions ( 0.7%) were compiled, the rest were copied from previous compilation.
+  0 of 613 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    3 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
   2019_iocp.vcxproj -> C:\Users\hw\Desktop\4-2\GameServerProgramming_TermProject\GSP2019\2019_iocp\x64\Release\2019_iocp.exe
