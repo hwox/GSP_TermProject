@@ -4,8 +4,8 @@ c:\users\hw\desktop\4-2\gameserverprogramming_termproject\gsp2019\2019_iocp\2019
 c:\users\hw\desktop\4-2\gameserverprogramming_termproject\gsp2019\2019_iocp\2019_iocp\server.cpp(500): warning C4101: 'packet' :참조되지 않은 지역 변수입니다.
 LINK : warning LNK4098: 'LIBCMT' defaultlib가 다른 라이브러리와 충돌합니다. /NODEFAULTLIB:library를 사용하십시오.
   코드를 생성하고 있습니다.
-  4 of 608 functions ( 0.7%) were compiled, the rest were copied from previous compilation.
+  2 of 609 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    12 functions had inline decision re-evaluated but remain unchanged
+    10 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
   2019_iocp.vcxproj -> C:\Users\hw\Desktop\4-2\GameServerProgramming_TermProject\GSP2019\2019_iocp\x64\Release\2019_iocp.exe
