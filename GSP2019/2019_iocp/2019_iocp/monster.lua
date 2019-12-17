@@ -1,7 +1,5 @@
-
-math.randomseed(os.date("%d%H%M%S"))
-
 my_id = 1;	
+
 function set_npc_id(id)
 	my_id = id
 end
