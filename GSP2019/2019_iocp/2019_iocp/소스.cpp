@@ -26,7 +26,7 @@ using namespace chrono;
 #define MAX_BUFFER        1024
 constexpr auto VIEW_RANGE = 3;
 
-enum EVENT_TYPE { EV_RECV, EV_SEND, EV_LOGIN, EV_MOVE/*, EV_PLAYER_MOVE_NOTIFY*/, EV_MOVE_TARGET, EV_ATTACK, EV_HEAL, EV_RUN, EV_IDLE, EV_PLAYER_BYE_NOTIFY, EV_DIE };
+enum EVENT_TYPE { EV_RECV, EV_SEND, EV_MOVE, EV_MOVE_TARGET, EV_ATTACK, EV_HEAL, EV_RUN, EV_IDLE, EV_DIE };
 
 struct OVER_EX {
 	WSAOVERLAPPED over;
@@ -86,6 +86,8 @@ HANDLE	g_iocp;
 
 int new_user_id = 0;
 void HEAL_repeat(int player_id);
+void LOGIN(int key, int id);
+void DIE_Check(int player_id);
 
 
 void error_display(const char *msg, int err_no)
@@ -196,6 +198,11 @@ void send_put_object_packet(int client, int new_id)
 	packet.x = clients[new_id]->x;
 	packet.y = clients[new_id]->y;
 	packet.npc_type = clients[new_id]->m_type;
+
+	packet.hp = clients[new_id]->hp;
+	packet.level = clients[new_id]->level;
+	packet.exp = clients[new_id]->exp;
+
 	send_packet(client, &packet);
 
 	if (client == new_id) return;
@@ -254,7 +261,7 @@ void send_state_change_packet(int id, short hp, short level, int exp)
 	packet.exp = exp;
 
 	send_packet(id, &packet);
-	/*db.saveDB(clients[id]->name, clients[id]->x, clients[id]->y, level, exp, hp);*/
+
 }
 bool is_near_id(int player, int other)
 {
@@ -262,50 +269,65 @@ bool is_near_id(int player, int other)
 	return (0 != clients[player]->near_id.count(other));
 }
 
+//void send_die_packet(int client)
+//{
+//	sc_packet_die packet;
+//	packet.size = sizeof(packet);
+//	packet.type = SC_DIE;
+//	packet.id = client;
+//	send_packet(client, &packet);
+//}
 
 void Attack(int id)
 {
 	clients[id]->near_lock.lock();
-	auto old_vl = clients[id]->near_id;
+	auto vl_list = clients[id]->near_id;
 	clients[id]->near_lock.unlock();
 
-	set <int> new_vl;
-	for (auto &cl : clients) {
-		int other = cl.second->id;
-		if (id == other) continue; // 내 아이디랑 같으면 
-		// 근데 여기 is_near 두 번 할 필요없을거같은덴 
-		if (true == is_near_NPC(id, other)) {
-			if (true == is_near(id, other)) {
-				new_vl.insert(other);
-				if (true == Is_NPC(other) && true == is_near_attack(id, other)) {
-					OVER_EX  *over_ex = new OVER_EX;
-					over_ex->event_type = EV_ATTACK;
-					*(int *)(over_ex->net_buf) = id;
-					PostQueuedCompletionStatus(g_iocp, 1, other, &over_ex->over);
+	for (auto &obj : vl_list)
+	{
+		if (obj == id) continue;
+		if (true == Is_NPC(obj) && is_near_attack(id, obj))
+		{
+			clients[obj]->hp -= (clients[id]->level * 5);
+			if (clients[obj]->hp <= 0)
+			{
+				clients[id]->exp += clients[obj]->exp;
+
+				send_state_change_packet(id, clients[id]->hp, clients[id]->level, clients[id]->exp);
+
+				// 사망 여기! 
+				//send_die_packet(id);
+				/*OVER_EX *over_ex = new OVER_EX;
+				over_ex->event_type = EV_DIE;
+				*(int *)(over_ex->net_buf) = id;
+				PostQueuedCompletionStatus(g_iocp, 1, obj, &over_ex->over);*/
+				EVENT ev{ obj, high_resolution_clock::now() + 5s, EV_DIE, 0 ,1 };
+				add_timer(ev);
+				cout << "DIE EVENT 들어감" << endl;
+			}
+			send_put_object_packet(id, obj);
+			// '나'를 기준으로 attack하고 주변에 있는것들을 탐색한 거
+			char hit[5];
+			sprintf_s(hit, "hit");
+			send_chat_player_packet(id, obj, hit);
+
+
+			set <int> new_vl;
+			for (auto &cl : clients) {
+				int other = cl.second->id;
+				if (id == other) continue;
+				if (false == Is_NPC(other))
+				{
+					send_put_object_packet(other, obj);
+					/*char text[50];
+					sprintf(text, "[%d]번 플레이어가 공격했습니다.", id);*/
 				}
 			}
+
 		}
 	}
 
-	for (auto cl : old_vl) {
-		if (0 != new_vl.count(cl)) {
-			if (false == Is_NPC(cl))
-				send_pos_packet(cl, id);
-		}
-		else
-		{
-			send_remove_player_packet(id, cl);
-			if (false == Is_NPC(cl))
-				send_remove_player_packet(cl, id);
-		}
-	}
-	for (auto cl : new_vl) {
-		if (0 == old_vl.count(cl)) {
-			send_put_object_packet(id, cl);
-			if (false == Is_NPC(cl))
-				send_put_object_packet(cl, id);
-		}
-	}
 }
 
 void Set_NPC_StandEV(int key, int id)
@@ -346,9 +368,41 @@ void Set_NPC_StandEV(int key, int id)
 	}
 	}
 }
+
+void Set_NPC_TimeEV(int key, int id)
+{
+	switch (clients[key]->m_type)
+	{
+	case MST_PIECE:
+	{
+		EVENT ev{ key, high_resolution_clock::now() + 1s, EV_IDLE, 0 };
+		add_timer(ev);
+		break;
+	}
+	case MST_WAR:
+	{
+		EVENT ev{ key, high_resolution_clock::now() + 1s, EV_MOVE, 0 };
+		add_timer(ev);
+		break;
+	}
+	case MST_STOP:
+	{
+		EVENT ev{ key, high_resolution_clock::now() + 1s, EV_IDLE, 0 };
+		add_timer(ev);
+		break;
+	}
+	case MST_LOAMING:
+	{
+		EVENT ev{ key, high_resolution_clock::now() + 1s, EV_MOVE, 0 };
+		add_timer(ev);
+		break;
+	}
+	}
+}
 void ProcessPacket(int id, void *buff)
 {
 	char *packet = reinterpret_cast<char *>(buff);
+
 
 	short x = clients[id]->x;
 	short y = clients[id]->y;
@@ -383,12 +437,28 @@ void ProcessPacket(int id, void *buff)
 	}
 	case CS_ATTACK:
 	{
-		cout << "공격 키 눌렀다! " << endl;
-		// 리스트 검색해서 (주변에 있는 npc)
-		// 걔네 상하좌우에 있는 애들 죽여야지 
-		//Attack(id);
+		Attack(id);
 	}
 	break;
+	case CS_LOGIN:
+	{
+		cout << "LOGIN" << endl;
+
+		char input_id[10];
+		for (int i = 0; i < 10; i++)
+		{
+			input_id[i] = packet[i + 2];
+		}
+		int temp_id = atoi(input_id);
+		LOGIN(id, temp_id);
+		x = clients[id]->x;
+		y = clients[id]->y;
+		break;
+	}
+	case CS_STATE_CHANGE:
+		//서버에서 레벨 바뀌거나 경험치 바뀔 때 
+
+		break;
 	default:
 		break;
 	}
@@ -403,17 +473,15 @@ void ProcessPacket(int id, void *buff)
 		if (true == is_near_NPC(id, other)) {
 			if (true == Is_NPC(other) && (false == Is_Active(other))) {
 				clients[other]->is_active = true;
-				//EVENT ev{ other, high_resolution_clock::now() + 1s, EV_IDLE, 0 };
-			//	add_timer(ev);
+				Set_NPC_TimeEV(other, other);
 			}
 			if (true == is_near(id, other)) {
 				new_vl.insert(other);
 				if (true == Is_NPC(other)) {
-					//OVER_EX  *over_ex = new OVER_EX;
-					//over_ex->event_type = EV_MOVE;
-					//*(int *)(over_ex->net_buf) = id;
-					//PostQueuedCompletionStatus(g_iocp, 1, other, &over_ex->over);
-					Set_NPC_StandEV(other, id);
+					OVER_EX *over_ex = new OVER_EX;
+					over_ex->event_type = EV_MOVE_TARGET;
+					*(int *)(over_ex->net_buf) = id;
+					PostQueuedCompletionStatus(g_iocp, 1, other, &over_ex->over);
 				}
 			}
 		}
@@ -444,7 +512,6 @@ void ProcessPacket(int id, void *buff)
 }
 void DIE_Check(int player_id)
 {
-
 	if (false == Is_NPC(player_id)) {
 		if (clients[player_id]->hp <= 0)
 		{
@@ -455,7 +522,6 @@ void DIE_Check(int player_id)
 			clients[player_id]->x = INITPOS;
 			clients[player_id]->y = INITPOS;
 			clients[player_id]->hp = HP_MAX;
-
 			send_state_change_packet(player_id, clients[player_id]->hp, clients[player_id]->level, clients[player_id]->exp);
 		}
 
@@ -504,10 +570,11 @@ void LOGIN(int key, int id)
 		if (result)
 		{
 			db.GetInitInfo(id, &clients[key]->x, &clients[key]->y, &clients[key]->level, &clients[key]->exp, &clients[key]->hp);
-
 			send_login_ok_packet(key);
 			send_state_change_packet(key, clients[key]->hp, clients[key]->level, clients[key]->exp);
+
 			clients[key]->name = id;
+
 			break;
 		}
 		else {
@@ -515,7 +582,6 @@ void LOGIN(int key, int id)
 		}
 	}
 }
-
 
 void do_random_move(int npc_id)
 {
@@ -586,7 +652,6 @@ void do_random_move(int npc_id)
 
 }
 
-
 void do_monster_run_move(int npc_id, int player_id, int remain_repeat)
 {
 
@@ -610,27 +675,10 @@ void do_monster_run_move(int npc_id, int player_id, int remain_repeat)
 		send_pos_packet(pc.second->id, npc->id);
 	}
 
+	EVENT new_ev{ npc_id, high_resolution_clock::now() + 1s, EV_MOVE, 0 ,remain_repeat };
+	add_timer(new_ev);
 
-	if (remain_repeat == 0)
-	{
-		OVER_EX  *over_ex = new OVER_EX;
-		over_ex->event_type = EV_PLAYER_BYE_NOTIFY;
-		*(int *)(over_ex->net_buf) = player_id;
-		PostQueuedCompletionStatus(g_iocp, 1, npc_id, &over_ex->over);
-		//EVENT new_ev{ npc_id, high_resolution_clock::now() + 1s, EV_PLAYER_BYE_NOTIFY, 0 };
-		//add_timer(new_ev);
-	}
-	else
-	{
-		EVENT new_ev{ npc_id, high_resolution_clock::now() + 1s, EV_MOVE, 0 ,remain_repeat };
-		add_timer(new_ev);
-	}
-
-
-	//EVENT new_ev{ npc_id, high_resolution_clock::now() + 1s, EV_MOVE, 0 ,remain_repeat };
-	//add_timer(new_ev);
 }
-
 
 void do_worker()
 {
@@ -665,25 +713,6 @@ void do_worker()
 		else if (EV_SEND == over_ex->event_type) {
 			delete over_ex;
 		}
-		else if (EV_LOGIN == over_ex->event_type)
-		{
-			cout << "LOGIN" << endl;
-			if (over_ex->net_buf[1] == CS_LOGIN)
-			{
-				char input_id[10];
-				for (int i = 0; i < 10; i++)
-				{
-					input_id[i] = over_ex->net_buf[i + 2];
-				}
-				int temp_id = atoi(input_id);
-				LOGIN(key, temp_id);
-			}
-			ProcessPacket(key, over_ex->net_buf);
-			over_ex->event_type = EV_RECV;
-			DWORD flags = 0;
-			memset(&over_ex->over, 0x00, sizeof(WSAOVERLAPPED));
-			WSARecv(client_s, over_ex->wsabuf, 1, 0, &flags, &over_ex->over, 0);
-		}
 		else if (EV_MOVE == over_ex->event_type) {
 			if (clients[key]->m_type == MST_LOAMING ||
 				clients[key]->m_type == MST_WAR)
@@ -700,39 +729,6 @@ void do_worker()
 		{
 			//cout << key << " : IDLE" << endl;
 		}
-		//else if (EV_PLAYER_MOVE_NOTIFY == over_ex->event_type) {
-		//	int player_id = *(int *)(over_ex->net_buf);
-
-		//	lua_State *L = clients[key]->L;
-
-		//	lua_getglobal(L, "event_player_move_notify");	// 이 함수 호출
-		//	lua_pushnumber(L, player_id);
-		//	lua_pushnumber(L, clients[player_id]->x);
-		//	lua_pushnumber(L, clients[player_id]->y);
-		//	lua_pcall(L, 3, 1, 0);
-
-		//	int result = (int)lua_tonumber(L, -1);
-		//	lua_pop(L, 1);
-
-		//	if (result == 2)
-		//	{
-		//		OVER_EX  *over_ex = new OVER_EX;
-		//		over_ex->event_type = EV_MOVE;
-		//		over_ex->repeat = 2;
-		//		*(int *)(over_ex->net_buf) = player_id;
-		//		PostQueuedCompletionStatus(g_iocp, 1, key, &over_ex->over);
-
-		//	}
-		//}
-		else if (EV_PLAYER_BYE_NOTIFY == over_ex->event_type) {
-
-			//int player_id = *(int *)(over_ex->net_buf);
-			//lua_State *L = clients[key]->L;
-
-			//lua_getglobal(L, "event_monster_bye_notify");	// 이 함수 호출
-			//lua_pushnumber(L, player_id);
-			//lua_pcall(L, 1, 0, 0);
-		}
 		else if (EV_HEAL == over_ex->event_type)
 		{
 
@@ -743,10 +739,45 @@ void do_worker()
 			// 그러면 여기 들어와서 player x, y로 move하면 되잖아. 
 			// 주변에 있는 애들한테는 move_target주고
 			// 주변에 없는 애들한테는 그냥 set_ev 주고
+
+
+			int player_id = *(int *)(over_ex->net_buf);
+
+			//lua_State *L = clients[key]->L;
+
+			//lua_getglobal(L, "player_Conflict");	// 이 함수 호출
+			//lua_pushnumber(L, player_id);
+			//lua_pushnumber(L, clients[player_id]->x);
+			//lua_pushnumber(L, clients[player_id]->y);
+			//lua_pcall(L, 3, 1, 0);
+
+			//int result = (int)lua_tonumber(L, -1);
+			//lua_pop(L, 1);
+
+			//if (result == 2)
+			//{
+			//	clients[player_id]->hp -= 3 * clients[key]->level;
+			//	send_state_change_packet(player_id, clients[player_id]->hp, clients[player_id]->level, clients[player_id]->exp);
+			//	DIE_Check(player_id);
+
+			//}
+
+			if (clients[player_id]->x == clients[key]->x
+				&& clients[player_id]->y == clients[key]->y)
+			{
+				cout << "충돌" << endl;
+
+				clients[player_id]->hp -= 3;
+				send_state_change_packet(player_id, clients[player_id]->hp, clients[player_id]->level, clients[player_id]->exp);
+				DIE_Check(player_id);
+			}
 		}
-		else if (EV_DIE)
+		else if (EV_DIE == over_ex->event_type)
 		{
 			// 죽으면 30초 후에 부활
+
+			cout << " DIE 에 들어왔어요 " << endl;
+
 		}
 		else {
 			cout << "Unknown Event Type :" << over_ex->event_type << endl;
@@ -784,6 +815,21 @@ int lua_send_chat_packet(lua_State *L)
 	return 0;
 }
 
+int lua_setting_init_npc(lua_State *L)
+{
+	int npc_id = (int)lua_tonumber(L, -9);
+	clients[npc_id]->x = (int)lua_tonumber(L, -8);
+	clients[npc_id]->y = (int)lua_tonumber(L, -7);
+	clients[npc_id]->m_type = (int)lua_tonumber(L, -6);
+	clients[npc_id]->level = (int)lua_tonumber(L, -5);
+	clients[npc_id]->hp = (int)lua_tonumber(L, -4);
+	clients[npc_id]->exp = (int)lua_tonumber(L, -3);
+	clients[npc_id]->is_active = (int)lua_tonumber(L, -2);
+	clients[npc_id]->socket = (int)lua_tonumber(L, -1);
+	lua_pop(L, 10);
+
+	return 1;
+}
 
 void lua_error(lua_State *L, const char *fmt, ...) {
 	va_list argp;
@@ -797,14 +843,9 @@ void Create_NPC()
 {
 	cout << "Initializing NPC \n";
 	for (int npc_id = NPC_ID_START; npc_id < NPC_ID_START + NUM_NPC; ++npc_id) {
+
 		clients[npc_id] = new SOCKETINFO;
 		clients[npc_id]->id = npc_id;
-		clients[npc_id]->x = rand() % WORLD_WIDTH;
-		clients[npc_id]->y = rand() % WORLD_HEIGHT;
-		clients[npc_id]->socket = -1;
-		clients[npc_id]->is_active = false;
-		clients[npc_id]->m_type = rand() % 4 + 1;
-
 		lua_State *L = luaL_newstate();
 		clients[npc_id]->L = L;
 		luaL_openlibs(L);
@@ -813,9 +854,16 @@ void Create_NPC()
 		lua_getglobal(L, "set_npc_id");
 		lua_pushnumber(L, npc_id);
 		lua_pcall(L, 1, 0, 0);		// 가상 머신 초기화
+		lua_register(L, "API_setting_Init_NPC", lua_setting_init_npc);
+
+		lua_getglobal(L, "init_set_npc_infor");	// 이 함수 호출
+		lua_pushnumber(L, npc_id);
+		lua_pcall(L, 1, 0, 0);
+
 		lua_register(L, "API_get_x_position", lua_get_x_position);
 		lua_register(L, "API_get_y_position", lua_get_y_position);
 		lua_register(L, "API_send_chat_packet", lua_send_chat_packet);
+
 	}
 	cout << "NPC initializaion finished. \n";
 }
@@ -902,14 +950,6 @@ void do_timer()
 			case EV_MOVE:
 				over_ex->event_type = EV_MOVE;
 				break;
-			case EV_PLAYER_BYE_NOTIFY:
-				over_ex->event_type = EV_PLAYER_BYE_NOTIFY;
-				break;
-				//case EV_HEAL:
-				//	p_ev.repeat++;
-				//	over_ex->event_type = EV_HEAL;
-				//	break;
-
 			default:
 				cout << "Error~" << endl;
 				break;
@@ -920,26 +960,14 @@ void do_timer()
 		}
 		else
 		{
-			if (clients[p_ev.obj_id]->m_type == MST_STOP
-				|| clients[p_ev.obj_id]->m_type == MST_LOAMING) {
-				OVER_EX *over_ex = new OVER_EX;
-				over_ex->event_type = EV_IDLE;
-				PostQueuedCompletionStatus(g_iocp, 1, p_ev.obj_id, &over_ex->over);
-			}
-			else {
-				OVER_EX *over_ex = new OVER_EX;
-				over_ex->event_type = EV_MOVE;
-				PostQueuedCompletionStatus(g_iocp, 1, p_ev.obj_id, &over_ex->over);
-			}
+			//Set_NPC_TimeEV(p_ev.obj_id, p_ev.obj_id);
+			Set_NPC_StandEV(p_ev.obj_id, p_ev.obj_id);
 		}
-
-
-		for (auto &obj : clients)
-		{
-			DIE_Check(obj.second->id);
-			LEVEL_Up_Check(obj.second->id);
-		}
-
+		//for (auto &obj : clients)
+		//{
+		//	DIE_Check(obj.second->id);
+		//	LEVEL_Up_Check(obj.second->id);
+		//}
 	}
 }
 
@@ -982,8 +1010,8 @@ int main()
 		clients[user_id]->socket = clientSocket;
 		clients[user_id]->recv_over.wsabuf[0].len = MAX_BUFFER;
 		clients[user_id]->recv_over.wsabuf[0].buf = clients[user_id]->recv_over.net_buf;
+		clients[user_id]->recv_over.event_type = EV_RECV;
 		//clients[user_id]->recv_over.event_type = EV_RECV;
-		clients[user_id]->recv_over.event_type = EV_LOGIN;
 		flags = 0;
 		CreateIoCompletionPort(reinterpret_cast<HANDLE>(clientSocket), g_iocp, user_id, 0);
 

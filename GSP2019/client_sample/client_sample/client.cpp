@@ -47,8 +47,8 @@ class player {
 	int level;
 	int exp;
 public:
-	player(){}
-	~player(){}
+	player() {}
+	~player() {}
 
 	void HpSet(int _hp)
 	{
@@ -91,6 +91,8 @@ sf::RenderWindow *g_window;
 sf::Font g_font;
 sf::Font pixel_font;
 
+//sf::Text NOTICE;
+
 class OBJECT {
 private:
 	bool m_showing;
@@ -101,8 +103,11 @@ private:
 	sf::Text pos_text;
 	sf::Text TYPE;
 
+	high_resolution_clock::time_point die_time;
+
 public:
 	int m_x, m_y;
+	bool die_check;
 	OBJECT(sf::Texture &t, int x, int y, int x2, int y2) {
 		m_showing = false;
 		m_sprite.setTexture(t);
@@ -125,15 +130,12 @@ public:
 	{
 		m_showing = false;
 	}
-
 	void a_move(int x, int y) {
 		m_sprite.setPosition((float)x, (float)y);
 	}
-
 	void a_draw() {
 		g_window->draw(m_sprite);
 	}
-
 	void move(int x, int y) {
 		m_x = x;
 		m_y = y;
@@ -170,10 +172,28 @@ public:
 		TYPE.setString(text);
 		//g_window->draw(TYPE);
 	}
+	void object_die()
+	{
+		die_time = high_resolution_clock::now();
+		die_check = true;
+	}
+	bool die_end_check()
+	{
+		if (die_check)
+		{
+			if (die_time + 30s < high_resolution_clock::now())
+			{
+				die_check = false;
+				return true;
+			}
+			return false;
+		}
+	}
 };
 class STATE
 {
 	high_resolution_clock::time_point m_time_out;
+	high_resolution_clock::time_point re_vive;
 public:
 	STATE() {
 		m_time_out = high_resolution_clock::now() + 5s;
@@ -193,9 +213,40 @@ public:
 	}
 };
 
+class NOTICE {
+	bool showing;
+	sf::Text notice;
+	high_resolution_clock::time_point m_time_out;
+public:
+	NOTICE() {
+		notice.setFillColor(sf::Color::Magenta);
+		notice.setPosition(100, 100);
+		notice.setScale(0.7f, 0.7f);
+		m_time_out = high_resolution_clock::now();
+	}
+	~NOTICE()
+	{
+
+	}
+	void draw() {
+		if (high_resolution_clock::now() < m_time_out && showing) {
+			g_window->draw(notice);
+		}
+		else {
+			showing = false;
+		}
+	}
+	void add_chat(char chat[]) {
+		notice.setFont(pixel_font);
+		notice.setString(chat);
+		m_time_out = high_resolution_clock::now() + 2s;
+		showing = true;
+	}
+};
 OBJECT avatar;
 OBJECT players[MAX_USER];
 STATE status;
+NOTICE no;
 //OBJECT npcs[NUM_NPC];
 unordered_map <int, OBJECT> npcs;
 
@@ -275,6 +326,7 @@ void ProcessPacket(char *ptr)
 			players[id].show();
 		}
 		else {
+
 			switch (type)
 			{
 			case MST_PIECE:
@@ -298,21 +350,23 @@ void ProcessPacket(char *ptr)
 				npcs[id].show();
 				break;
 			default:
-				cout << "Monster Type Set Error !" << endl;
+				//cout << "Monster Type Set Error !" << endl;
 				//npcs[id] = OBJECT{ *enemy, 0, 0, 65, 65 };
-			//	npcs[id].move(my_packet->x, my_packet->y);
+				//npcs[id].move(my_packet->x, my_packet->y);
 				//npcs[id].show();
 				break;
 			}
-			npcs[id].set_IdType(my_packet->level,my_packet->hp);
-			
-			if (my_packet->hp <= 0)
-			{
-				cout << "사망" << endl;
-				// 그냥 얘 die처리만 하고 player한테 exp 올려주기만할까? 
-				//send_state_change_packet(type, my_packet->hp, my_packet->exp, my_packet->level);
-			}
+			npcs[id].set_IdType(my_packet->level, my_packet->hp);
 
+			//else {
+			//	if (npcs[id].die_end_check())
+			//	{
+			//		// 이게 true면 패킷 보내기! 
+			//		// hp 회복 시켜서! 
+			//		hp = 100 + ((my_packet->level * 100) / 2);
+			//		send_state_change_packet(type, hp, my_packet->exp, my_packet->level);
+			//	}
+			//}
 		}
 		break;
 	}
@@ -332,7 +386,7 @@ void ProcessPacket(char *ptr)
 			if (0 != npcs.count(other_id))
 				npcs[other_id].move(my_packet->x, my_packet->y);
 		}
-	
+
 		break;
 	}
 
@@ -374,12 +428,25 @@ void ProcessPacket(char *ptr)
 	case SC_STAT_CHANGE:
 	{
 		sc_packet_stat_change *my_packet = reinterpret_cast<sc_packet_stat_change *>(ptr);
-		p.HpSet( my_packet->hp);
+		p.HpSet(my_packet->hp);
 		p.LevelSet(my_packet->level);
 		p.ExpSet(my_packet->exp);
-	
+
 		break;
 	}
+	case SC_NOTICE:
+	{
+		sc_packet_chat *my_packet = reinterpret_cast<sc_packet_chat *>(ptr);
+		no.add_chat(my_packet->chat);
+		break;
+	}
+	//case SC_DIE:
+	//{
+	//	sc_packet_die *my_packet = reinterpret_cast<sc_packet_die *>(ptr);
+	//	int id = my_packet->id;
+	//	npcs[id].object_die();
+	//	break;
+	//}
 	default:
 		printf("Unknown PACKET type [%d]\n", ptr[1]);
 	}
@@ -468,6 +535,9 @@ void client_main()
 	p_exptext.setString(ShowEXP);
 	p_exptext.setFillColor(sf::Color::Red);
 	g_window->draw(p_exptext);
+
+	// 게임 공지
+	no.draw();
 }
 
 void send_move_packet(int p_type)

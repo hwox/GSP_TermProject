@@ -67,7 +67,7 @@ struct EVENT {
 	int event_type;
 	int target_obj;
 
-	int repeat;
+	bool stop;
 	constexpr bool operator < (const EVENT& left) const
 	{
 		return wakeup_time > left.wakeup_time;
@@ -263,12 +263,29 @@ void send_state_change_packet(int id, short hp, short level, int exp)
 	send_packet(id, &packet);
 
 }
+void send_notice_packet(int client, int chatter, char mess[])
+{
+	sc_packet_chat packet;
+	packet.size = sizeof(packet);
+	packet.type = SC_NOTICE;
+	packet.id = chatter;
+	strcpy_s(packet.chat, mess);
+	send_packet(client, &packet);
+}
 bool is_near_id(int player, int other)
 {
 	lock_guard <mutex> gl{ clients[player]->near_lock };
 	return (0 != clients[player]->near_id.count(other));
 }
 
+//void send_die_packet(int client)
+//{
+//	sc_packet_die packet;
+//	packet.size = sizeof(packet);
+//	packet.type = SC_DIE;
+//	packet.id = client;
+//	send_packet(client, &packet);
+//}
 
 void Attack(int id)
 {
@@ -287,9 +304,13 @@ void Attack(int id)
 				clients[id]->exp += clients[obj]->exp;
 
 				send_state_change_packet(id, clients[id]->hp, clients[id]->level, clients[id]->exp);
+
+				clients[obj]->die = true;
+				// 사망 여기! 
+				//send_die_packet(id);
 			}
 			send_put_object_packet(id, obj);
-			// '나'를 기준으로 attack하고 주변에 있는것들을 탐색한 거
+
 			char hit[5];
 			sprintf_s(hit, "hit");
 			send_chat_player_packet(id, obj, hit);
@@ -298,12 +319,31 @@ void Attack(int id)
 			set <int> new_vl;
 			for (auto &cl : clients) {
 				int other = cl.second->id;
-				if (id == other) continue;
-				if (false == Is_NPC(other))
-				{
-					send_put_object_packet(other, obj);
-					/*char text[50];
-					sprintf(text, "[%d]번 플레이어가 공격했습니다.", id);*/
+				if (!clients[obj]->die) {
+					if (id == other)
+					{
+						char text[50];
+						sprintf_s(text, "Number %d Player Hit %d", id, obj);
+						send_notice_packet(other, id, text);
+						continue;
+					}
+					if (false == Is_NPC(other))
+					{
+						char text[50];
+						sprintf_s(text, "Number %d Player Hit %d", id, obj);
+						send_put_object_packet(other, obj);
+						send_notice_packet(other, id, text);
+					}
+				}
+				else {
+					if (false == Is_NPC(other))
+					{
+						int exp = clients[obj]->exp;
+						char text[50];
+						sprintf_s(text, "Number %d Player Get %d Exp", id, exp);
+						//send_notice_packet(obj, id, text);
+						send_notice_packet(other, id, text);
+					}
 				}
 			}
 
@@ -629,35 +669,7 @@ void do_random_move(int npc_id)
 	}
 
 	// 그리고 MOVE상태로 
-	EVENT new_ev{ npc_id, high_resolution_clock::now() + 1s, EV_MOVE, 0 , 1 };
-	add_timer(new_ev);
-
-}
-
-void do_monster_run_move(int npc_id, int player_id, int remain_repeat)
-{
-
-	SOCKETINFO *npc = clients[npc_id];
-	int x = npc->x;
-	int y = npc->y;
-
-	switch (rand() % 4) {
-	case 0: if (y > 0) y--; break;
-	case 1: if (y < (WORLD_HEIGHT - 1)) y++; break;
-	case 2: if (x > 0) x--; break;
-	case 3: if (x < (WORLD_WIDTH - 1)) x++; break;
-	}
-
-	npc->x = x;
-	npc->y = y;
-
-	for (auto &pc : clients) {
-		if (true == Is_NPC(pc.second->id)) continue;
-		if (false == is_near(pc.second->id, npc->id)) continue;
-		send_pos_packet(pc.second->id, npc->id);
-	}
-
-	EVENT new_ev{ npc_id, high_resolution_clock::now() + 1s, EV_MOVE, 0 ,remain_repeat };
+	EVENT new_ev{ npc_id, high_resolution_clock::now() + 1s, EV_MOVE, 0 };
 	add_timer(new_ev);
 
 }
@@ -701,15 +713,16 @@ void do_worker()
 			{
 				do_random_move(key);
 			}
-			else {
-				int player_id = *(int *)(over_ex->net_buf);
-				do_monster_run_move(key, player_id, over_ex->repeat);
-			}
+			//else {
+			//	int player_id = *(int *)(over_ex->net_buf);
+			//	do_monster_run_move(key, player_id, over_ex->repeat);
+			//}
 			delete over_ex;
 		}
 		else if (EV_IDLE == over_ex->event_type)
 		{
 			//cout << key << " : IDLE" << endl;
+			delete over_ex;
 		}
 		else if (EV_HEAL == over_ex->event_type)
 		{
@@ -717,12 +730,6 @@ void do_worker()
 		}
 		else if (EV_MOVE_TARGET == over_ex->event_type)
 		{
-			// 저 위에서 near할 때 war인지 뭔지애한테는 EV로 MOVE_TARGET주자
-			// 그러면 여기 들어와서 player x, y로 move하면 되잖아. 
-			// 주변에 있는 애들한테는 move_target주고
-			// 주변에 없는 애들한테는 그냥 set_ev 주고
-
-
 			int player_id = *(int *)(over_ex->net_buf);
 
 			//lua_State *L = clients[key]->L;
@@ -757,6 +764,12 @@ void do_worker()
 		else if (EV_DIE == over_ex->event_type)
 		{
 			// 죽으면 30초 후에 부활
+
+
+			cout << " DIE 에 들어왔어요 " << endl;
+
+			EVENT new_ev{ key, high_resolution_clock::now() + 5s, EV_DIE, 0, false };
+			add_timer(new_ev);
 		}
 		else {
 			cout << "Unknown Event Type :" << over_ex->event_type << endl;
@@ -915,32 +928,14 @@ void do_timer()
 			continue;
 		}
 		EVENT p_ev = ev;
-
 		timer_queue.pop();
 		timer_lock.unlock();
 
-		if (p_ev.repeat > 0) {
-			OVER_EX *over_ex = new OVER_EX;
-			switch (ev.event_type)
-			{
-			case EV_IDLE:
-				over_ex->event_type = EV_IDLE;
-				break;
-			case EV_MOVE:
-				over_ex->event_type = EV_MOVE;
-				break;
-			default:
-				cout << "Error~" << endl;
-				break;
-			}
-			p_ev.repeat--;
-			over_ex->repeat = p_ev.repeat;
-			PostQueuedCompletionStatus(g_iocp, 1, p_ev.obj_id, &over_ex->over);
-		}
-		else
-		{
-			//Set_NPC_TimeEV(p_ev.obj_id, p_ev.obj_id);
+		if (!p_ev.stop) {
 			Set_NPC_StandEV(p_ev.obj_id, p_ev.obj_id);
+		}
+		else {
+			cout << "Stop" << endl;
 		}
 		//for (auto &obj : clients)
 		//{

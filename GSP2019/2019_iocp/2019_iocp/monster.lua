@@ -28,7 +28,7 @@ function init_set_npc_infor(player_id)
 	init_y = (math.random(0,799)*my_id)%800
 	init_type = (math.random(1,4)*my_id )%5
 	init_level = (math.random(1,10))
-	init_hp = 100+(100*init_level/2)
+	init_hp = 100+((100*init_level)/2)
 	if (type == 2) then
 		init_exp = init_level*5*2*2
 	elseif (type == 3) then

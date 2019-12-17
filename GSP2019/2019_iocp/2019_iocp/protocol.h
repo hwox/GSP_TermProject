@@ -36,6 +36,8 @@ constexpr int MAX_STR_LEN = 50;
 #define SC_REMOVE_OBJECT	5
 #define SC_CHAT				6
 #define SC_STAT_CHANGE		7
+//#define SC_DIE				8
+#define SC_NOTICE			9
 
 #define MST_PIECE 1 // 주변에 지나가도 때리기 전에는 가만히 있는 평화 몬스터
 #define MST_WAR	2 // 근처에 지나가면 딱히 공격적 행동을 안 해도 쫓아와서 때리는 몬스터
@@ -100,6 +102,14 @@ struct sc_packet_stat_change {
 	int   exp;
 };
 
+//struct sc_packet_die
+//{
+//	char size;
+//	char type;
+//	int id;
+//
+//};
+
 struct cs_packet_login {
 	char	size;
 	char	type;
@@ -122,6 +132,7 @@ struct cs_packet_chat {
 	char	type;
 	char	chat_str[100];
 };
+
 
 struct cs_packet_logout {
 	char	size;
