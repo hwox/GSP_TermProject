@@ -161,12 +161,12 @@ public:
 		m_text.setString(chat);
 		m_time_out = high_resolution_clock::now() + 1s;
 	}
-	void set_IdType(int my_ID, int my_TYPE)
+	void set_IdType(int my_level, int my_hp)
 	{
 		float rx = (m_x - g_left_x) * 65.0f + 8;
 		float ry = (m_y - g_top_y) * 65.0f + 8;
 		char text[20];
-		sprintf_s(text, "id %d,%d", my_ID, my_TYPE);
+		sprintf_s(text, "Lv:%d Hp:%d", my_level, my_hp);
 		TYPE.setString(text);
 		//g_window->draw(TYPE);
 	}
@@ -261,7 +261,8 @@ void ProcessPacket(char *ptr)
 		sc_packet_put_object *my_packet = reinterpret_cast<sc_packet_put_object *>(ptr);
 		int id = my_packet->id;
 		int type = my_packet->npc_type;
-
+		//int hp = my_packet->hp;
+		//cout << hp << endl;
 		if (id == g_myid) {
 			avatar.move(my_packet->x, my_packet->y);
 			g_left_x = my_packet->x - 4;
@@ -273,12 +274,9 @@ void ProcessPacket(char *ptr)
 			players[id].show();
 		}
 		else {
-			// enemy 여기서 타입에 따라서 바ㅜ꺼주어ㅑ 함
-			//switch(npcs[id].type)
 			switch (type)
 			{
 			case MST_PIECE:
-				cout << "들어오는데 왜 안그려짐?" << endl;
 				npcs[id] = OBJECT{ *enemy, 0, 0, 65, 65 };
 				npcs[id].move(my_packet->x, my_packet->y);
 				npcs[id].show();
@@ -305,8 +303,8 @@ void ProcessPacket(char *ptr)
 				//npcs[id].show();
 				break;
 			}
-			npcs[id].set_IdType(id, type);
-
+			npcs[id].set_IdType(my_packet->level,my_packet->hp);
+			
 		}
 		break;
 	}

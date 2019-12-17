@@ -196,6 +196,11 @@ void send_put_object_packet(int client, int new_id)
 	packet.x = clients[new_id]->x;
 	packet.y = clients[new_id]->y;
 	packet.npc_type = clients[new_id]->m_type;
+	//
+	packet.hp = clients[new_id]->hp;
+	packet.level = clients[new_id]->level;
+	packet.exp = clients[new_id]->exp;
+//
 	send_packet(client, &packet);
 
 	if (client == new_id) return;
@@ -725,22 +730,6 @@ int lua_get_y_position(lua_State *L)
 	return 1;
 }
 
-int lua_set_init_x_position(lua_State *L)
-{
-	int npc_id = (int)lua_tonumber(L, -1);
-	lua_pop(L, 2);
-	int x = clients[npc_id]->x;
-	lua_pushnumber(L, x);
-	return 1;
-}
-int lua_set_init_y_position(lua_State *L)
-{
-	int npc_id = (int)lua_tonumber(L, -1);
-	lua_pop(L, 2);
-	clients[npc_id]->y = ((rand() % 300)*npc_id) % 799;
-	lua_pushnumber(L, clients[npc_id]->y);
-	return 1;
-}
 
 int lua_send_chat_packet(lua_State *L)
 {
@@ -765,7 +754,8 @@ int lua_setting_init_npc(lua_State *L)
 	clients[npc_id]->is_active = (int)lua_tonumber(L, -2);
 	clients[npc_id]->socket = (int)lua_tonumber(L, -1);
 	lua_pop(L, 10);
-	return 0;
+
+	return 1;
 }
 
 void lua_error(lua_State *L, const char *fmt, ...) {
@@ -780,31 +770,6 @@ void Create_NPC()
 {
 	cout << "Initializing NPC \n";
 	for (int npc_id = NPC_ID_START; npc_id < NPC_ID_START + NUM_NPC; ++npc_id) {
-
-		//clients[npc_id] = new SOCKETINFO;
-		//clients[npc_id]->id = npc_id;
-		////clients[npc_id]->x = rand() % WORLD_WIDTH;
-		////clients[npc_id]->y = rand() % WORLD_HEIGHT;
-		////clients[npc_id]->socket = -1;
-		////clients[npc_id]->is_active = false;
-		////clients[npc_id]->m_type = rand() % 4 + 1;
-
-		//lua_State *L = luaL_newstate();
-		//clients[npc_id]->L = L;
-		//luaL_openlibs(L);
-		//luaL_loadfile(L, "monster.lua");
-		//lua_pcall(L, 0, 0, 0);
-		//lua_getglobal(L, "set_npc_id");
-		//lua_pushnumber(L, npc_id);
-		//lua_pcall(L, 1, 0, 0);		// 가상 머신 초기화
-		//lua_register(L, "API_get_x_position", lua_get_x_position);
-		//lua_register(L, "API_get_y_position", lua_get_y_position);
-		//lua_register(L, "API_send_chat_packet", lua_send_chat_packet);
-		//lua_register(L, "API_setting_Init_NPC", lua_setting_init_npc);
-
-		//lua_getglobal(L, "init_set_npc_infor");	// 이 함수 호출
-		//lua_pushnumber(L, npc_id);
-		//lua_pcall(L, 1, 0, 0);
 
 		clients[npc_id] = new SOCKETINFO;
 		clients[npc_id]->id = npc_id;
