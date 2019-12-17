@@ -1,0 +1,162 @@
+﻿  server.cpp
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqltypes.h(64): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqltypes.h(64): error C2146: 구문 오류: ';'이(가) 'SQLLEN' 식별자 앞에 없습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqltypes.h(65): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqltypes.h(65): error C2146: 구문 오류: ';'이(가) 'SQLULEN' 식별자 앞에 없습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqltypes.h(289): error C3646: 'Data1': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqltypes.h(289): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqltypes.h(290): error C3646: 'Data2': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqltypes.h(290): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqltypes.h(291): error C3646: 'Data3': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqltypes.h(291): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqltypes.h(292): error C3646: 'Data4': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqltypes.h(292): error C2143: 구문 오류: ','이(가) '[' 앞에 없습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqltypes.h(292): error C2143: 구문 오류: ')'이(가) ';' 앞에 없습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqltypes.h(292): error C2238: ';' 앞에 예기치 않은 토큰이 있습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqltypes.h(297): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqltypes.h(297): error C2378: 'SQLULEN': 재정의. 형식 정의를 사용하여 기호를 오버로드할 수 없습니다.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqltypes.h(65): note: 'SQLULEN' 선언을 참조하십시오.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqltypes.h(297): error C2146: 구문 오류: ';'이(가) 'BOOKMARK' 식별자 앞에 없습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sql.h(621): error C2061: 구문 오류: 식별자 'SQLLEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sql.h(627): error C2061: 구문 오류: 식별자 'SQLULEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sql.h(645): error C2061: 구문 오류: 식별자 'SQLLEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sql.h(686): error C2061: 구문 오류: 식별자 'SQLULEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sql.h(715): error C2061: 구문 오류: 식별자 'SQLLEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sql.h(750): error C2061: 구문 오류: 식별자 'SQLLEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sql.h(763): error C2061: 구문 오류: 식별자 'SQLLEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sql.h(826): error C2061: 구문 오류: 식별자 'SQLLEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sql.h(829): error C2061: 구문 오류: 식별자 'SQLLEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sql.h(839): error C2061: 구문 오류: 식별자 'SQLULEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sql.h(855): error C2061: 구문 오류: 식별자 'SQLLEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sql.h(868): error C2061: 구문 오류: 식별자 'SQLULEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sql.h(880): error C2061: 구문 오류: 식별자 'SQLULEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(1930): error C2061: 구문 오류: 식별자 'SQLLEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(1953): error C2061: 구문 오류: 식별자 'SQLULEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(1962): error C2061: 구문 오류: 식별자 'SQLLEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2009): error C2061: 구문 오류: 식별자 'SQLULEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2091): error C2061: 구문 오류: 식별자 'SQLULEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2160): error C2061: 구문 오류: 식별자 'SQLLEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2170): error C2065: 'LPWSTR': 선언되지 않은 식별자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2170): error C2146: 구문 오류: ')'이(가) 'szFileName' 식별자 앞에 없습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2176): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2176): error C2146: 구문 오류: ';'이(가) 'TraceReturn' 식별자 앞에 없습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2177): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2177): error C2146: 구문 오류: ';'이(가) 'TraceVersion' 식별자 앞에 없습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2195): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2195): error C2146: 구문 오류: ';'이(가) 'ODBCSetTryWaitValue' 식별자 앞에 없습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2196): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2196): error C2086: 'int DWORD': 재정의
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2177): note: 'DWORD' 선언을 참조하십시오.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2196): error C2146: 구문 오류: ';'이(가) 'ODBCGetTryWaitValue' 식별자 앞에 없습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2218): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2218): error C2143: 구문 오류: ';'이(가) '*' 앞에 없습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2218): error C2238: ';' 앞에 예기치 않은 토큰이 있습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2219): error C3646: 'dwFlags': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2219): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2221): error C2143: 구문 오류: ';'이(가) '*' 앞에 없습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2221): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2221): error C2238: ';' 앞에 예기치 않은 토큰이 있습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2222): error C2143: 구문 오류: ';'이(가) '*' 앞에 없습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2222): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2222): error C2238: ';' 앞에 예기치 않은 토큰이 있습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2225): error C2143: 구문 오류: ';'이(가) '*' 앞에 없습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2225): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2225): error C2238: ';' 앞에 예기치 않은 토큰이 있습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2226): error C2143: 구문 오류: ';'이(가) '*' 앞에 없습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2226): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2226): error C2238: ';' 앞에 예기치 않은 토큰이 있습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2231): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2231): error C2086: 'int VOID': 재정의
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2176): note: 'VOID' 선언을 참조하십시오.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2231): error C2146: 구문 오류: ';'이(가) 'FireVSDebugEvent' 식별자 앞에 없습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlucode.h(55): error C2061: 구문 오류: 식별자 'SQLLEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlucode.h(82): error C2061: 구문 오류: 식별자 'SQLLEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlucode.h(107): error C2061: 구문 오류: 식별자 'SQLULEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlucode.h(188): error C2061: 구문 오류: 식별자 'SQLLEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlucode.h(277): error C2061: 구문 오류: 식별자 'SQLULEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlucode.h(480): error C2061: 구문 오류: 식별자 'SQLLEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlucode.h(505): error C2061: 구문 오류: 식별자 'SQLLEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlucode.h(530): error C2061: 구문 오류: 식별자 'SQLULEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlucode.h(597): error C2061: 구문 오류: 식별자 'SQLLEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlucode.h(696): error C2061: 구문 오류: 식별자 'SQLULEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlucode.h(701): error C2061: 구문 오류: 식별자 'SQLULEN'
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\shared\minwindef.h(156): error C2378: 'DWORD': 재정의. 형식 정의를 사용하여 기호를 오버로드할 수 없습니다.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2177): note: 'DWORD' 선언을 참조하십시오.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\shared\minwindef.h(157): error C2378: 'BOOL': 재정의. 형식 정의를 사용하여 기호를 오버로드할 수 없습니다.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2195): note: 'BOOL' 선언을 참조하십시오.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\shared\minwindef.h(162): error C2143: 구문 오류: ';'이(가) '*' 앞에 없습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\shared\minwindef.h(162): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\shared\minwindef.h(162): error C2378: 'BOOL': 재정의. 형식 정의를 사용하여 기호를 오버로드할 수 없습니다.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2195): note: 'BOOL' 선언을 참조하십시오.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\shared\minwindef.h(163): error C2143: 구문 오류: ';'이(가) '*' 앞에 없습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\shared\minwindef.h(163): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\shared\minwindef.h(163): error C2378: 'BOOL': 재정의. 형식 정의를 사용하여 기호를 오버로드할 수 없습니다.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2195): note: 'BOOL' 선언을 참조하십시오.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\shared\minwindef.h(171): error C2143: 구문 오류: ';'이(가) '*' 앞에 없습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\shared\minwindef.h(171): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\shared\minwindef.h(171): error C2378: 'DWORD': 재정의. 형식 정의를 사용하여 기호를 오버로드할 수 없습니다.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2177): note: 'DWORD' 선언을 참조하십시오.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\shared\minwindef.h(172): error C2143: 구문 오류: ';'이(가) '*' 앞에 없습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\shared\minwindef.h(172): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\shared\minwindef.h(172): error C2378: 'DWORD': 재정의. 형식 정의를 사용하여 기호를 오버로드할 수 없습니다.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2177): note: 'DWORD' 선언을 참조하십시오.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\shared\basetsd.h(78): error C2371: 'INT64': 재정의. 기본 형식이 다릅니다.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqltypes.h(64): note: 'INT64' 선언을 참조하십시오.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\shared\basetsd.h(82): error C2371: 'UINT64': 재정의. 기본 형식이 다릅니다.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqltypes.h(65): note: 'UINT64' 선언을 참조하십시오.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(653): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(653): error C2378: 'DWORD': 재정의. 형식 정의를 사용하여 기호를 오버로드할 수 없습니다.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2177): note: 'DWORD' 선언을 참조하십시오.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(653): error C2146: 구문 오류: ';'이(가) 'FLONG' 식별자 앞에 없습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(732): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(732): error C2378: 'DWORD': 재정의. 형식 정의를 사용하여 기호를 오버로드할 수 없습니다.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\sqlext.h(2177): note: 'DWORD' 선언을 참조하십시오.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(732): error C2146: 구문 오류: ';'이(가) 'LCID' 식별자 앞에 없습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(733): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(733): error C2378: 'PDWORD': 재정의. 형식 정의를 사용하여 기호를 오버로드할 수 없습니다.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\shared\minwindef.h(171): note: 'PDWORD' 선언을 참조하십시오.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(733): error C2146: 구문 오류: ';'이(가) 'PLCID' 식별자 앞에 없습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(825): error C3646: 'LowPart': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(825): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(829): error C3646: 'LowPart': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(829): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(845): error C3646: 'LowPart': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(845): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(846): error C3646: 'HighPart': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(846): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(849): error C3646: 'LowPart': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(849): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(850): error C3646: 'HighPart': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(850): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(874): error C3646: 'LowPart': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(874): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(1141): error C3646: 'Flink': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(1141): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(1142): error C3646: 'Blink': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(1142): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(1160): error C3646: 'Uniquifier': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(1160): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(2544): error C3646: 'ErrorOffset': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(2544): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(2547): error C3646: 'DataOffset': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(2547): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(2550): error C3646: 'MxCsr': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(2550): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(2551): error C3646: 'MxCsr_Mask': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(2551): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(2592): error C3646: 'Length': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(2592): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(2593): error C3646: 'Reserved1': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(2593): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(2613): error C3646: 'Count': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(2613): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(2615): error C3646: 'BeginAddress': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(2615): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(2616): error C3646: 'EndAddress': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(2616): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(2617): error C3646: 'HandlerAddress': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(2617): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(2618): error C3646: 'JumpTarget': 알 수 없는 재정의 지정자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(2618): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(2762): error C2065: 'Index': 선언되지 않은 식별자입니다.
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winnt.h(2762): fatal error C1003: 오류 수가 100개를 초과했습니다. 컴파일을 중지합니다.
